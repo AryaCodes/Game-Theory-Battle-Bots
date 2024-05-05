@@ -34,7 +34,7 @@ class board:
     Returns a copy of the array containing the board state.
     """
     def retrieve_game_state(self):
-        return self.__board_state[:,:]
+        return self.__board_state.copy()
     
     """
     Checks and adds a chip to a coloumn if it has space.
