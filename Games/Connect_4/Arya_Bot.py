@@ -5,11 +5,12 @@ class Arya_Bot:
     def __init__(self):
         pass
 
-    def play_move(self, game_state, current_player):
+    def play_move(self, game_state, current_player, depth = 0):
         self.game_state = game_state 
         self.current_player = current_player
         self.opponet_player = self.set_opponent_player()
         (self.no_of_rows, self.no_of_coloumns) = game_state.shape
+        self.depth = depth
 
         self.current_player_value = [-0.001 for _ in range(self.no_of_coloumns)]
         self.current_player_row = ['x' for _ in range(self.no_of_coloumns)]
@@ -17,6 +18,8 @@ class Arya_Bot:
         self.total_player_value = [-0.001 for _ in range(self.no_of_coloumns)]
         self.col_is_full = [True for _ in range(self.no_of_coloumns)]
 
+        if self.depth == 4:
+            return (0,-0.001)
 
         #This checks which coloumns actually have space.
         for col_no in range(self.no_of_coloumns):
@@ -38,9 +41,9 @@ class Arya_Bot:
 
             if self.current_player_value[col_no] != -0.001:
                 temp_game_state[self.current_player_row[col_no], col_no] = self.current_player
-                self.opponent_player_value[col_no] = mini_bot.play_move_2(temp_game_state, self.opponet_player)
+                self.opponent_player_value[col_no] = mini_bot.play_move(temp_game_state, self.opponet_player, depth + 1)[1]
 
-        print(self.current_player_value, self.opponent_player_value)
+        #print(self.current_player_value, self.opponent_player_value)
         for col_no in range(self.no_of_coloumns):
             self.total_player_value[col_no] = self.current_player_value[col_no] - self.opponent_player_value[col_no]
 
@@ -51,7 +54,7 @@ class Arya_Bot:
 
             
 
-        return np.argmax(self.total_player_value) + 1
+        return (np.argmax(self.total_player_value) + 1, max(self.total_player_value))
         
 
     def play_move_2(self, game_state, current_player):
@@ -214,6 +217,7 @@ class Arya_Bot:
         diagonal_2_range = diagonal_top_left + diagonal_bottom_right + 1
 
         v_score = 0
+        v_score_multiplier = 6**self.depth
 
         y_temp = y - horizontal_to_left
         for c in range(horizontal_range):
@@ -232,7 +236,7 @@ class Arya_Bot:
             elif no_of_player_tokens == 2:
                 v_score +=4
             elif no_of_player_tokens == 3:
-                v_score += 10000
+                v_score += 100000/v_score_multiplier
                 
                 
             
@@ -253,7 +257,7 @@ class Arya_Bot:
             elif no_of_player_tokens == 2:
                 v_score +=4
             elif no_of_player_tokens == 3:
-                v_score += 10000
+                v_score += 100000/v_score_multiplier
 
 
         y_temp = y - diagonal_bottom_left
@@ -274,7 +278,7 @@ class Arya_Bot:
             elif no_of_player_tokens == 2:
                 v_score +=4
             elif no_of_player_tokens == 3:
-                v_score += 10000
+                v_score += 100000/v_score_multiplier
 
         y_temp = y - diagonal_top_left
         x_temp = x - diagonal_top_left
@@ -294,7 +298,7 @@ class Arya_Bot:
             elif no_of_player_tokens == 2:
                 v_score +=4
             elif no_of_player_tokens == 3:
-                v_score += 10000
+                v_score += 100000/v_score_multiplier
         
                 
                 
