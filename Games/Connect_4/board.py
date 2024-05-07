@@ -31,16 +31,40 @@ class board:
             print(f"\n")
 
     """
+    return 2D array of game state but with symbols (like X and O) for showing it nicely on front end
+    """
+    def get_game_as_symbols(self):
+        game_as_symbols = self.__board_state
+        
+        #thanks ChatGPT :)
+        if self.__no_of_players == 2:
+            game_as_symbols = [
+                    [
+                        " " if value == 0.0
+                        else "X" if value == 1.0 
+                        else "O" if value == 2 
+                        else value 
+                        for value in row
+                    ] 
+                    for row in game_as_symbols
+                ]
+            return game_as_symbols
+    """
     Returns a copy of the array containing the board state.
     """
     def retrieve_game_state(self):
-        return self.__board_state[:,:]
+        return self.__board_state
     
     """
-    Checks and adds a chip to a coloumn if it has space.
+    Returns the current player who's turn it is to move (either 1 or 2)
     """
-    
-    def add_to_coloumn(self, coloumn_number = 1):
+    def get_current_player(self):
+        return self.__current_player
+
+    """
+    Returns a boolean on whether the given move is allowed
+    """
+    def is_valid_move(self, coloumn_number):
         try:
             coloumn_number = int(coloumn_number)
             assert isinstance(coloumn_number, int)
@@ -48,41 +72,50 @@ class board:
         
         except AssertionError as e:
             print("The coloumn number must be a valid positive integer")
-            return (False, False)
+            return False
         
         except ValueError as e:
             print("Come on Dope, Atleast enter a number.")
-            return (False, False)
+            return False
 
         __has_space = False
         for x in self.__board_state[:,coloumn_number-1]:
             if x == 0:
                 __has_space = True
 
-        has_won = False
-        if __has_space == False:
+        if not __has_space:
             print("The coloumn is full choose another one.")
-            return (False, False)
+            return False
         
-        else:
-            for y in range(len(self.__board_state[:,coloumn_number-1])):
-                x = len(self.__board_state[:,coloumn_number-1]) - y - 1
-                if self.__board_state[x,coloumn_number-1] == 0:
-                    self.__board_state[x,coloumn_number-1] = self.__current_player
-                    if self.player_has_won(x, coloumn_number-1) == True:
-                        has_won = True
-                        pass
-                    else:
-                        self.__current_player += 1
-                        if self.__current_player> self.__no_of_players:
-                            self.__current_player = 1
-                    break
+        return True
 
-        self.__filled_places += 1            
+    """
+    Checks and adds a chip to a coloumn if it has space.
+    """
+    def add_to_coloumn(self, coloumn_number = 1):
+        if not self.is_valid_move(coloumn_number):
+            return (False, False)
+        coloumn_number = int(coloumn_number)
+        
+        has_won = False
+        for y in range(len(self.__board_state[:,coloumn_number-1])):
+            x = len(self.__board_state[:,coloumn_number-1]) - y - 1
+            if self.__board_state[x,coloumn_number-1] == 0:
+                self.__board_state[x,coloumn_number-1] = self.__current_player
+                if self.player_has_won(x, coloumn_number-1) == True:
+                    has_won = True
+                    pass
+                else:
+                    self.__current_player += 1
+                    if self.__current_player> self.__no_of_players:
+                        self.__current_player = 1
+                break
+
+        self.__filled_places += 1      
         return (True, has_won)
 
     """Checks all 4 directions to deterime if the played move won the game."""
-    def player_has_won(self, x, y):
+    def player_has_won(self, row_number, col_number):
         horizontal_to_left = 0
         horizontal_to_right = 0
         vertical_above = 0
@@ -94,8 +127,8 @@ class board:
 
         current_player = self.get_current_player()
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
 
         while True:
             if y_temp == 0: 
@@ -106,8 +139,8 @@ class board:
             else: 
                 break
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
 
         while True:
             if y_temp == self.__no_of_columns - 1: 
@@ -118,8 +151,8 @@ class board:
             else: 
                 break
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
 
         while True:
             if x_temp == 0: 
@@ -130,8 +163,8 @@ class board:
             else: 
                 break
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
 
         while True:
             if x_temp == self.__no_of_rows - 1: 
@@ -142,8 +175,8 @@ class board:
             else: 
                 break
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
 
         while True:
             if x_temp == 0 or y_temp==0: 
@@ -155,8 +188,8 @@ class board:
             else: 
                 break
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
 
         while True:
             if x_temp == 0 or y_temp==self.__no_of_columns-1: 
@@ -168,8 +201,8 @@ class board:
             else: 
                 break
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
         
         while True:
             if x_temp == self.__no_of_rows-1 or y_temp==self.__no_of_columns-1: 
@@ -181,8 +214,8 @@ class board:
             else: 
                 break
 
-        x_temp = x
-        y_temp = y
+        x_temp = row_number
+        y_temp = col_number
         
         while True:
             if x_temp == self.__no_of_rows-1 or y_temp==0: 
@@ -217,3 +250,16 @@ class board:
         if self.__filled_places >= (self.__no_of_columns*self.__no_of_rows):
             return True
         return False
+    
+    """
+    resets the board to be empty again, but with the same parameters
+    """
+    def reset_board(self):
+        self.__board_state = np.zeros((self.__no_of_rows, self.__no_of_columns))
+
+    """
+    let's you load a different board state
+    WARNING: This will cause problems if you upload a board state that has a different number of rows and columns
+    """
+    def load_board(self,  new_board_state):
+        self.__board_state = new_board_state
