@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
 import board
-from pyllist import dllist
 from Beder import random_bot
 
 app = Flask(__name__)
@@ -47,8 +46,6 @@ if __name__ == '__main__':
     num_connect = 4
     connect_4_board = board.board(num_play, num_rows, num_col, num_connect)
     
-    game_state_list = dllist([connect_4_board.retrieve_game_state()])
     app.config['board'] = connect_4_board
-    app.config['current_game_state'] = game_state_list.first
 
     app.run(debug=True)

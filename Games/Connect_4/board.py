@@ -236,7 +236,7 @@ class board:
             return True
 
         return False
-        
+    
     """
     Returns the current player whose turn it is.
     """
@@ -261,5 +261,6 @@ class board:
     let's you load a different board state
     WARNING: This will cause problems if you upload a board state that has a different number of rows and columns
     """
-    def load_board(self,  new_board_state):
+    def load_board(self,  new_board_state, player):
         self.__board_state = new_board_state
+        self.__current_player = player

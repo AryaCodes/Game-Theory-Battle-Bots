@@ -10,16 +10,21 @@ if __name__ == "__main__":
     test = board.board(num_play, num_rows, num_col, num_connect)
 
     game_won = False
-    bot = beder_bot(test.retrieve_game_state())
+    bot = beder_bot(copy.copy(test))
     while True:
         test.print_board()
-        bot_move = bot.get_next_move(copy.copy(test.retrieve_game_state()), test.get_current_player())
+        col_no = 0
+        input()
+        if test.get_current_player() == 2:
+            # col_no = input()
+            col_no = bot.get_next_move(copy.copy(test.retrieve_game_state()), test.get_current_player()) + 1
+        elif test.get_current_player() == 1:
+            col_no = bot.get_next_move(copy.copy(test.retrieve_game_state()), test.get_current_player()) + 1
+            print("col_no", col_no)
+            bot.print_score_matrix()
         # bot.print_connectivity_matrix()
         # bot.print_potential_matrix()
-        bot.print_score_matrix()
         print(f"Player {test.get_current_player()}s Turn. Enter a coloumn to play chip-'")
-        # col_no = input()
-        col_no = bot_move
         # col_no = random_bot(test.retrieve_game_state(), test.get_current_player())
         Add = test.add_to_coloumn(col_no)
         if Add[0] == False:
