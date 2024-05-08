@@ -52,6 +52,8 @@ class Arya_Bot:
 
              
 
+        if depth == 0:
+            print(self.total_player_value)
             
 
         return (np.argmax(self.total_player_value) + 1, max(self.total_player_value))
@@ -217,7 +219,7 @@ class Arya_Bot:
         diagonal_2_range = diagonal_top_left + diagonal_bottom_right + 1
 
         v_score = 0
-        v_score_multiplier = 6**self.depth
+        v_score_multiplier = 1.25**self.depth
 
         y_temp = y - horizontal_to_left
         for c in range(horizontal_range):
@@ -234,9 +236,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
                 
                 
             
@@ -255,9 +257,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
 
 
         y_temp = y - diagonal_bottom_left
@@ -276,9 +278,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
 
         y_temp = y - diagonal_top_left
         x_temp = x - diagonal_top_left
@@ -296,9 +298,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
         
                 
                 
@@ -306,7 +308,7 @@ class Arya_Bot:
         
         #print(y,horizontal_to_left, horizontal_to_right)        
       
-        return v_score
+        return v_score/v_score_multiplier
     
 
     def calculate_current_player_value2(self, x, y):
