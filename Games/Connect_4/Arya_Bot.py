@@ -5,18 +5,21 @@ class Arya_Bot:
     def __init__(self):
         pass
 
-    def play_move(self, game_state, current_player, depth = 0):
+    def play_move(self, game_state, current_player, filled_places, depth = 0):
         self.game_state = game_state 
         self.current_player = current_player
         self.opponet_player = self.set_opponent_player()
         (self.no_of_rows, self.no_of_coloumns) = game_state.shape
         self.depth = depth
+        self.filled_places = filled_places
 
         self.current_player_value = [-0.001 for _ in range(self.no_of_coloumns)]
         self.current_player_row = ['x' for _ in range(self.no_of_coloumns)]
         self.opponent_player_value = [-0.001 for _ in range(self.no_of_coloumns)]
         self.total_player_value = [-0.001 for _ in range(self.no_of_coloumns)]
         self.col_is_full = [True for _ in range(self.no_of_coloumns)]
+
+        depth_check = 4
 
         if self.depth == 4:
             return (0,-0.001)
@@ -41,7 +44,7 @@ class Arya_Bot:
 
             if self.current_player_value[col_no] != -0.001:
                 temp_game_state[self.current_player_row[col_no], col_no] = self.current_player
-                self.opponent_player_value[col_no] = mini_bot.play_move(temp_game_state, self.opponet_player, depth + 1)[1]
+                self.opponent_player_value[col_no] = mini_bot.play_move(temp_game_state, self.opponet_player, self.filled_places, depth + 1)[1]
 
         #print(self.current_player_value, self.opponent_player_value)
         for col_no in range(self.no_of_coloumns):
@@ -217,7 +220,7 @@ class Arya_Bot:
         diagonal_2_range = diagonal_top_left + diagonal_bottom_right + 1
 
         v_score = 0
-        v_score_multiplier = 6**self.depth
+        v_score_multiplier = 1.1**self.depth
 
         y_temp = y - horizontal_to_left
         for c in range(horizontal_range):
@@ -234,9 +237,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
                 
                 
             
@@ -255,9 +258,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
 
 
         y_temp = y - diagonal_bottom_left
@@ -276,9 +279,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
 
         y_temp = y - diagonal_top_left
         x_temp = x - diagonal_top_left
@@ -296,9 +299,9 @@ class Arya_Bot:
             elif no_of_player_tokens == 1:
                 v_score +=3
             elif no_of_player_tokens == 2:
-                v_score +=4
+                v_score +=6
             elif no_of_player_tokens == 3:
-                v_score += 100000/v_score_multiplier
+                v_score += 100000
         
                 
                 
@@ -306,7 +309,7 @@ class Arya_Bot:
         
         #print(y,horizontal_to_left, horizontal_to_right)        
       
-        return v_score
+        return v_score / v_score_multiplier
     
 
     def calculate_current_player_value2(self, x, y):

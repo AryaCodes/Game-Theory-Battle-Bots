@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 import board
-from Beder import random_bot
+from beder_bot import beder_bot
+import Arya_Bot
+import copy
 
 app = Flask(__name__)
 
@@ -11,13 +13,15 @@ def index():
     #TODO comments above and function cleaning
     if request.method == 'POST':
         move_to_make = 1
-        is_bot_move = request.form.get('isBotMove')
-        if(is_bot_move):
-            move_to_make = random_bot.random_move(app.config['board'])
-            pass
-        else:
-            move_to_make = int(request.form['col'])
-
+        if app.config['turn'] == 2:
+            num_filled_places = app.config['board'].get_filled_places()
+            move_tup = app.config['arya_bot'].play_move(app.config['board'].retrieve_game_state(), 2, num_filled_places)
+            move_to_make = move_tup[0]
+            app.config['turn'] = 1 
+        elif app.config['turn'] == 1:
+            move_to_make = app.config['beder_bot'].get_next_move(app.config['board'].retrieve_game_state(), 1) + 1
+            app.config['turn'] = 2
+        
         Add = app.config['board'].add_to_coloumn(move_to_make)
         app.config['board']
 
@@ -25,8 +29,6 @@ def index():
             print("Try again.") #TODO show message on frontend
         elif Add[1] == True:
             return render_template('index.html', board=app.config['board'].get_game_as_symbols(), message=f"Player wins!", num_of_col=len(app.config['board'].get_game_as_symbols()[0]))
-            #TODO vvv
-            # print(f"Player {test.get_current_player()} has won. Congratulations!'")
         elif app.config['board'].is_board_full():
             return render_template('index.html', board=app.config['board'].get_game_as_symbols(), message="No more moves can be played. Big Sad. It's a tie.", num_of_col=len(app.config['board'].get_game_as_symbols()[0]))
     
@@ -46,6 +48,12 @@ if __name__ == '__main__':
     num_connect = 4
     connect_4_board = board.board(num_play, num_rows, num_col, num_connect)
     
+    beder_bot = beder_bot(copy.copy(connect_4_board))
+    Arya_Bot = Arya_Bot.Arya_Bot()
+
+    app.config['arya_bot'] = Arya_Bot
+    app.config['beder_bot'] = beder_bot
     app.config['board'] = connect_4_board
+    app.config['turn'] = 1
 
     app.run(debug=True)

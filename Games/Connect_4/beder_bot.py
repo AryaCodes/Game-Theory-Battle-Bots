@@ -292,7 +292,6 @@ class beder_bot:
                     self.__score_matrix[row_num, col_num] = " "
                     self.__opponent_score_matrix[row_num, col_num] = " "
 
-    #TODO how do I include blocking opponent? is that covered in minmax when the opponent is calculated?
     def evaluate_piece(self, row_num, col_num, current_player, game_state):
         horizontal_to_left = 0
         horizontal_to_right = 0
@@ -327,7 +326,10 @@ class beder_bot:
         opposite_player = self.get_opposite_player(current_player)
 
         while True:
-            if y_temp == 0 or horizontal_to_left >= 3: 
+            if y_temp == 0:
+                is_left_open = False
+                break
+            elif horizontal_to_left >= 3: 
                 break
             y_temp = y_temp - 1
             if game_state[x_temp, y_temp] == opposite_player:
@@ -341,7 +343,10 @@ class beder_bot:
         y_temp = col_num
 
         while True:
-            if y_temp == self.__no_of_columns - 1 or horizontal_to_right >= 3: 
+            if y_temp == self.__no_of_columns - 1:
+                is_right_open = False
+                break
+            elif horizontal_to_right >= 3: 
                 break
             y_temp = y_temp + 1
             if game_state[x_temp, y_temp] == opposite_player:
@@ -355,9 +360,12 @@ class beder_bot:
         y_temp = col_num
 
         while True:
-            if x_temp == 0  or vertical_above >= 3: 
+            if x_temp == self.__no_of_rows - 1:
+                is_above_open = False
                 break
-            x_temp = x_temp - 1
+            elif vertical_above >= 3:
+                break
+            x_temp = x_temp + 1
             if game_state[x_temp, y_temp] == opposite_player:
                 is_above_open = False
                 break
@@ -369,9 +377,12 @@ class beder_bot:
         y_temp = col_num
 
         while True:
-            if x_temp == self.__no_of_rows - 1  or vertical_below >= 3: 
+            if x_temp == 0:
+                is_below_open = False
                 break
-            x_temp = x_temp + 1
+            elif vertical_below >= 3: 
+                break
+            x_temp = x_temp - 1
             if game_state[x_temp, y_temp] == opposite_player:
                 is_below_open = False
                 break
@@ -383,7 +394,10 @@ class beder_bot:
         y_temp = col_num
 
         while True:
-            if x_temp == 0 or y_temp==0 or diagonal_top_left >= 3: 
+            if x_temp == 0 or y_temp==0:
+                is_top_left_open = False
+                break
+            elif diagonal_top_left >= 3:
                 break
             x_temp = x_temp - 1
             y_temp = y_temp - 1
@@ -398,7 +412,10 @@ class beder_bot:
         y_temp = col_num
 
         while True:
-            if x_temp == 0 or y_temp==self.__no_of_columns-1 or diagonal_top_right >= 3: 
+            if x_temp == 0 or y_temp==self.__no_of_columns-1:
+                is_top_right_open = False
+                break
+            elif diagonal_top_right >= 3: 
                 break
             x_temp = x_temp - 1
             y_temp = y_temp + 1
@@ -413,7 +430,10 @@ class beder_bot:
         y_temp = col_num
         
         while True:
-            if x_temp == self.__no_of_rows-1 or y_temp==self.__no_of_columns-1 or diagonal_bottom_right >= 3: 
+            if x_temp == self.__no_of_rows-1 or y_temp==self.__no_of_columns-1:
+                is_bottom_right_open = False
+                break
+            elif diagonal_bottom_right >= 3:
                 break
             x_temp = x_temp + 1
             y_temp = y_temp + 1
@@ -428,7 +448,10 @@ class beder_bot:
         y_temp = col_num
         
         while True:
-            if x_temp == self.__no_of_rows-1 or y_temp==0 or diagonal_bottom_left >= 3: 
+            if x_temp == self.__no_of_rows-1 or y_temp==0:
+                is_bottom_left_open = False
+                break
+            elif diagonal_bottom_left >= 3: 
                 break
             x_temp = x_temp + 1
             y_temp = y_temp - 1
