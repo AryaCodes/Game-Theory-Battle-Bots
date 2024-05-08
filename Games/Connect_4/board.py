@@ -53,7 +53,7 @@ class board:
     Returns a copy of the array containing the board state.
     """
     def retrieve_game_state(self):
-        return self.__board_state
+        return self.__board_state.copy()
     
     """
     Returns the current player who's turn it is to move (either 1 or 2)
