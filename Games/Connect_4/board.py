@@ -251,6 +251,9 @@ class board:
             return True
         return False
     
+    def get_filled_places(self):
+        return self.__filled_places
+
     """
     resets the board to be empty again, but with the same parameters
     """

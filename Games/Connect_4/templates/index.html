@@ -41,16 +41,7 @@
         {% endfor %}
     </table>
     <form method="post">
-        <p>Enter column number (1 - {{ num_of_col }}): <input type="number" name="col" min="1" max="{{ num_of_col }}"></p>
-        <div style="display: flex; justify-content: center;">
-            <input type="checkbox" name="isBotMove" checked>
-            <p>bot move?</p>
-        </div>
-        <div style="display: flex; justify-content: center;">
-            <input type="checkbox" name="isBotMove" checked>
-            <p>bot move?</p>
-        </div>
-        <input type="submit" value="Make Move">
+        <input type="submit" value="Next Move">
     </form>
     <p>{{ message }}</p>
     <form action="/reset" method="get">
