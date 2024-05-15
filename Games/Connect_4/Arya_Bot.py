@@ -222,11 +222,7 @@ class Arya_Bot:
         diagonal_2_range = diagonal_top_left + diagonal_bottom_right + 1
 
         v_score = 0
-<<<<<<< HEAD
-        v_score_multiplier = 1.25**self.depth
-=======
         v_score_multiplier = 1.1**self.depth
->>>>>>> 976d7d610dee179607ab79d420c614852c64b0eb
 
         y_temp = y - horizontal_to_left
         for c in range(horizontal_range):
@@ -315,11 +311,7 @@ class Arya_Bot:
         
         #print(y,horizontal_to_left, horizontal_to_right)        
       
-<<<<<<< HEAD
-        return v_score/v_score_multiplier
-=======
         return v_score / v_score_multiplier
->>>>>>> 976d7d610dee179607ab79d420c614852c64b0eb
     
 
     def calculate_current_player_value2(self, x, y):
